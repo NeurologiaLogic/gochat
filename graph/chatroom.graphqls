@@ -1,0 +1,12 @@
+# ID (unique identifier)
+# Name or title
+# Members (a list of user IDs)
+# Created timestamp
+
+type ChatRoom{
+    id: ID!
+    name: String!
+    members: [User!]
+    messages: [Message!]
+    createdAt: String!
+}

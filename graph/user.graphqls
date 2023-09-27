@@ -1,0 +1,35 @@
+# ID (unique identifier)
+# Username (unique)
+# Email
+# Password (hashed and salted)
+# Online status
+# Last activity timestamp
+
+type User {
+  id: ID!
+  username: String!
+  email: String!
+  password: String!
+  online: Boolean
+  # lastActivity: timestamp!
+  rooms: [ChatRoom!]
+}
+
+
+input newUser {
+    username: String!
+    email: String!
+    password: String!
+}
+type Mutation {
+  createUser(input:newUser): User!
+  login(username: String!, password: String!): User!
+  logout(username: String!): User!
+  joinRoom(username: String!, roomName: String!): User!
+  leaveRoom(username: String!, roomName: String!): User!
+  sendMessage(username: String!, roomName: String!, message: String!): Message!
+}
+
+type Query {
+  getRooms(username: String!): [ChatRoom!]
+}

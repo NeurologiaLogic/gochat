@@ -1,0 +1,13 @@
+# ID (unique identifier)
+# Text content
+# Sender (user ID)
+# Chat room (the room ID where the message belongs)
+# Timestamp
+
+type Message{
+    id: ID!
+    text: String!
+    sender: User!
+    chatRoom: ChatRoom!
+    createdAt: String!
+}
