@@ -10,7 +10,7 @@ import (
 
 var (
 	//how long to wait for a pong response
-	pongWait = 3600 * time.Second
+	pongWait = 10 * time.Second
 	//how often to ping the client
 	pingInterval = (pongWait * 9) / 10
 )

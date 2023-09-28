@@ -37,7 +37,7 @@
     <input type="text" id="name" placeholder="masukin nama kao" />
     <input type="text" id="text" placeholder="mau ngomong apa?" />
     <button id="submit">Submit</button>
-    <div id="container"></div>
+    <div id="container" style="overflow-y: scroll; max-height: 700px;"></div>
   </body>
   <script>
     const nameInput = document.getElementById("name");
@@ -48,8 +48,25 @@
 
     submitButton.addEventListener("click", (e) => {
       e.preventDefault();
+      sendMessage();
+    });
+
+    textInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    function sendMessage() {
       const textValue = textInput.value.toString();
       const nameValue = nameInput.value.toString();
+
+      // Check if the input message is empty before sending
+      if (textValue.trim() === "") {
+        return;
+      }
+
       const dataFormat = {
         type: "send_message",
         payload: {
@@ -58,12 +75,17 @@
         },
       };
       conn.send(JSON.stringify(dataFormat));
-    });
+      textInput.value = "";
+
+      // Scroll to the latest message
+      container.scrollTo(0, container.lastChild.scrollHeight);
+    }
 
     window.onload = function () {
-      conn = new WebSocket("ws://localhost:8080/ws");
+      conn = new WebSocket("wss://ec23-103-108-130-33.ngrok-free.app/ws");
       conn.onopen = function (e) {
         console.log("Connection established!");
+        textInput.focus(); // Focus on the text input when the connection is established
       };
       conn.onmessage = function (e) {
         console.log("response from server:", e.data);
@@ -88,10 +110,11 @@
 
         // Add the message element to the container
         container.appendChild(messageElement);
-      };
-      conn.onerror = function (e) {
-        window.location.reload();
+
+        // Scroll to the latest message
+        container.scrollTop = container.scrollHeight;
       };
     };
   </script>
+
 </html>
