@@ -10,7 +10,6 @@ import (
 )
 
 //harus di set dulu
-var connectionString = ""
 
 type DB struct{
 	client *mongo.Client
@@ -22,7 +21,7 @@ var db DB
 func initializeDB() (*DB,error){
 	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 	defer cancel()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI(utils.GodotEnv("MONGO_URI")))
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI(utils.GodotEnv("MONGGO_URL")))
 	if err != nil { return nil,err }
 	err = client.Ping(ctx, readpref.Primary())
 	if err != nil { return nil,err }

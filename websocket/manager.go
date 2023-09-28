@@ -33,7 +33,9 @@ func NewWebsocketManager() *WebsocketManager {
 
 //event handlers
 func (ws *WebsocketManager) applyEventHandlers(){
-	ws.eventHandlers[EventSendMessage] = SendMessage
+	ws.eventHandlers[EventSendMessage] = SendMessageHandler
+	ws.eventHandlers[EventChangeRoom] = ChangeRoomHandler
+
 }
 
 //event routing

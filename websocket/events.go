@@ -3,6 +3,7 @@ package websocket
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 //event structure
@@ -17,19 +18,35 @@ type EventHandler func(event Event, client *WebsocketClient) error
 //constants
 const (
 	EventSendMessage = "send_message"
+	EventChangeRoom = "change_room"
 )
 
-//broadcast message
+//types of event handlers
+
+//Message Received from payload
 type SendMessageEvent struct {
 	Message string `json:"message"`
 	From string `json:"from"`
 }
 
+//MessageResponse from Server to be broadcast
+type NewMessageEvent struct{
+	SendMessageEvent
+	Sent time.Time `json:"sent"`
+}
 
-//types of event handlers
-//event functions
-func SendMessage(event Event, c *WebsocketClient) error {
+func SendMessageHandler(event Event, c *WebsocketClient) error {
 	fmt.Println(event)
 	c.manager.Broadcast(event)
+	return nil
+}
+
+
+type ChangeRoom struct {
+	Name string `json:"name"`
+}
+
+func ChangeRoomHandler(event Event, c *WebsocketClient) error {
+
 	return nil
 }

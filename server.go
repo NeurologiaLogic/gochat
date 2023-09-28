@@ -31,11 +31,12 @@ func playgroundHandler() gin.HandlerFunc {
 
 func main() {
 	// Setting up Gin
-	gin.SetMode(gin.ReleaseMode)
+	// gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 	ws := websocket.NewWebsocketManager()
-	// go r.POST("/query", graphqlHandler())
-	// go r.GET("/", playgroundHandler())
+	go r.POST("/query", graphqlHandler())
+	go r.GET("/", playgroundHandler())
 	go r.GET("/ws",ws.Handler)
+	// r.RunTLS("localhost:8080","server.crt","server.key")
 	r.Run("localhost:8080")
 }

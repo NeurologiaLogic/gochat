@@ -1,1 +1,3 @@
 .vercel
+server.crt
+server.key

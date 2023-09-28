@@ -10,16 +10,17 @@ import (
 
 var (
 	//how long to wait for a pong response
-	pongWait = 60 * time.Second
+	pongWait = 3600 * time.Second
 	//how often to ping the client
 	pingInterval = (pongWait * 9) / 10
 )
 
 type WebsocketClient struct{
-	conn *websocket.Conn;
-	manager *WebsocketManager;
+	conn *websocket.Conn
+	manager *WebsocketManager
 	//messageQueue to avoid concurrent writing
-	messageQueue chan Event;
+	messageQueue chan Event
+	chatroom string
 }
 
 func NewWebsocketClient(conn *websocket.Conn,ws *WebsocketManager) *WebsocketClient{
@@ -27,6 +28,7 @@ func NewWebsocketClient(conn *websocket.Conn,ws *WebsocketManager) *WebsocketCli
 		conn:conn,
 		manager:ws,
 		messageQueue:make(chan Event),
+		chatroom:"general",
 	}
 }
 
