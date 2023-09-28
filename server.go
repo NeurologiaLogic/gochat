@@ -5,8 +5,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/NeurologiaLogic/gochat/graph"
-	"github.com/NeurologiaLogic/gochat/utils"
-	"fmt"
+	"github.com/NeurologiaLogic/gochat/websocket"
 )
 
 // Defining the Graphql handler
@@ -29,11 +28,14 @@ func playgroundHandler() gin.HandlerFunc {
 	}
 }
 
+
 func main() {
 	// Setting up Gin
+	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
-	go r.POST("/query", graphqlHandler())
-	go r.GET("/", playgroundHandler())
-	fmt.Println(utils.GodotEnv("test"))
-	r.Run()
+	ws := websocket.NewWebsocketManager()
+	// go r.POST("/query", graphqlHandler())
+	// go r.GET("/", playgroundHandler())
+	go r.GET("/ws",ws.Handler)
+	r.Run("localhost:8080")
 }
