@@ -3,29 +3,95 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>WebSocket Example</title>
+    <style>
+      /* Add your CSS styles here */
+      body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+      }
+      input {
+        padding: 5px;
+        margin-right: 10px;
+      }
+      button {
+        padding: 5px 10px;
+      }
+      #container {
+        margin-top: 20px;
+        text-align: left; /* Align the messages to the left */
+      }
+      .message {
+        background-color: #f2f2f2; /* Add background color to messages */
+        padding: 10px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+      }
+      .message-from {
+        font-weight: bold;
+        color: #333;
+      }
+    </style>
   </head>
   <body>
-    <input type="text" />
-    <button>Submit</button>
+    <input type="text" id="name" placeholder="masukin nama kao" />
+    <input type="text" id="text" placeholder="mau ngomong apa?" />
+    <button id="submit">Submit</button>
+    <div id="container"></div>
   </body>
   <script>
-    const input = document.querySelector("input");
-    const button = document.querySelector("button");
+    const nameInput = document.getElementById("name");
+    const textInput = document.getElementById("text");
+    const submitButton = document.getElementById("submit");
+    const container = document.getElementById("container");
     let conn;
-    button.addEventListener("click", () => {
-      const value = input.value;
-      conn.send(value);
+
+    submitButton.addEventListener("click", (e) => {
+      e.preventDefault();
+      const textValue = textInput.value.toString();
+      const nameValue = nameInput.value.toString();
+      const dataFormat = {
+        type: "send_message",
+        payload: {
+          from: nameValue,
+          message: textValue,
+        },
+      };
+      conn.send(JSON.stringify(dataFormat));
     });
 
     window.onload = function () {
-      conn = new WebSocket("ws://localhost:8080/ws")
+      conn = new WebSocket("ws://localhost:8080/ws");
       conn.onopen = function (e) {
         console.log("Connection established!");
       };
       conn.onmessage = function (e) {
-        console.log("response from server:",e.data);
+        console.log("response from server:", e.data);
+
+        // Parse the JSON data received from the server
+        const messageData = JSON.parse(e.data);
+
+        // Create a message element with appropriate styling
+        const messageElement = document.createElement("div");
+        messageElement.classList.add("message");
+
+        // Create and append the message content
+        const fromElement = document.createElement("div");
+        fromElement.classList.add("message-from");
+        fromElement.textContent = `From: ${messageData.payload.from}`;
+
+        const messageContentElement = document.createElement("div");
+        messageContentElement.textContent = `Message: ${messageData.payload.message}`;
+
+        messageElement.appendChild(fromElement);
+        messageElement.appendChild(messageContentElement);
+
+        // Add the message element to the container
+        container.appendChild(messageElement);
       };
-    }
+      conn.onerror = function (e) {
+        window.location.reload();
+      };
+    };
   </script>
 </html>

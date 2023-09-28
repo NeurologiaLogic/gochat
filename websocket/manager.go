@@ -70,9 +70,11 @@ func (ws *WebsocketManager) Handler(c *gin.Context){
 }
 
 //helper function
-func (ws *WebsocketManager) Broadcast(event Event){
+func (ws *WebsocketManager) Broadcast(event Event,c *WebsocketClient){
 	for client := range ws.clients{
-		client.messageQueue <- event
+		if client.chatroom == c.chatroom{
+			client.messageQueue <- event
+		}
 	}
 }
 

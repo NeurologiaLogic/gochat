@@ -58,7 +58,7 @@ func (c *WebsocketClient) readMessages(){
 		var request Event
 		//parsing the payload
 		if err := json.Unmarshal(payload,&request); err != nil{
-			fmt.Println("error unmarshalling")
+			fmt.Println("error unmarshalling for event: ", err)
 			break;
 		}
 		//routing the events
